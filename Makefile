@@ -1,10 +1,10 @@
 CC=			gcc
 CXX=		g++
-CFLAGS=		-g -Wall -O2
+CFLAGS=		-g -Wall -march=native -O3
 CXXFLAGS=	$(CFLAGS)
 CPPFLAGS=
 INCLUDES=
-OBJS=		u85-1.o u85-2.o u85-3.o
+OBJS=		u85-1.o u85-2.o u85-3.o u85-4.o
 PROG=		test-u85
 LIBS=		-lz
 
@@ -36,3 +36,6 @@ depend:
 		(LC_ALL=C; export LC_ALL; makedepend -Y -- $(CFLAGS) $(DFLAGS) -- *.c *.cpp)
 
 # DO NOT DELETE
+
+kalloc.o: kalloc.h
+main.o: ketopt.h kalloc.h kseq.h

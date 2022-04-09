@@ -2,6 +2,14 @@
 #include <stdint.h>
 #include <string.h>
 
+#if defined(__clang__)
+  #define PRAGMA_LOOP_VECTORIZE _Pragma("clang loop vectorize(enable)")
+#elif defined(__GNUC__)
+  #define PRAGMA_LOOP_VECTORIZE _Pragma("GCC ivdep")
+#else
+  #define PRAGMA_LOOP_VECTORIZE _Pragma("ivdep")
+#endif
+
 #define WF_NEG_INF (-0x40000000)
 
 static void wf_pad_str(int32_t tl, const char *ts, int32_t ql, const char *qs, char **pts, char **pqs)
@@ -74,7 +82,7 @@ static inline void wf_prune_global(int32_t tl, int32_t ql, int32_t *lo, int32_t 
 	*lo = l, *hi = h;
 }
 
-int32_t u85_3(int32_t tl, const char *ts, int32_t ql, const char *qs)
+int32_t u85_4(int32_t tl, const char *ts, int32_t ql, const char *qs)
 {
 	int32_t *a[2], *H, lo = 0, hi = 0, s = 0;
 	char *pts, *pqs;
@@ -97,6 +105,7 @@ int32_t u85_3(int32_t tl, const char *ts, int32_t ql, const char *qs)
 		if (lo > -tl) --lo;
 		if (hi <  ql) ++hi;
 		G = a[s&1] + 2 - lo;
+		PRAGMA_LOOP_VECTORIZE
 		for (d = lo; d <= hi; ++d) {
 			int32_t k = H[d-1];
 			k = k > H[d]   + 1? k : H[d]   + 1;

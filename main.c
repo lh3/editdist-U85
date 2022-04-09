@@ -10,6 +10,7 @@ KSEQ_INIT(gzFile, gzread)
 int32_t u85_1(int32_t tl, const char *ts, int32_t ql, const char *qs);
 int32_t u85_2(int32_t tl, const char *ts, int32_t ql, const char *qs);
 int32_t u85_3(int32_t tl, const char *ts, int32_t ql, const char *qs);
+int32_t u85_4(int32_t tl, const char *ts, int32_t ql, const char *qs);
 
 int main(int argc, char *argv[])
 {
@@ -39,6 +40,7 @@ int main(int argc, char *argv[])
 		if (algo == 1) s = u85_1(ks1->seq.l, ks1->seq.s, ks2->seq.l, ks2->seq.s);
 		else if (algo == 2) s = u85_2(ks1->seq.l, ks1->seq.s, ks2->seq.l, ks2->seq.s);
 		else if (algo == 3) s = u85_3(ks1->seq.l, ks1->seq.s, ks2->seq.l, ks2->seq.s);
+		else if (algo == 4) s = u85_4(ks1->seq.l, ks1->seq.s, ks2->seq.l, ks2->seq.s);
 		printf("%s\t%s\t%d\n", ks1->name.s, ks2->name.s, s);
 	}
 
