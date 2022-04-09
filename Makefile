@@ -4,7 +4,7 @@ CFLAGS=		-g -Wall -O2
 CXXFLAGS=	$(CFLAGS)
 CPPFLAGS=
 INCLUDES=
-OBJS=		u85-1.o
+OBJS=		u85-1.o u85-2.o
 PROG=		test-u85
 LIBS=		-lz
 

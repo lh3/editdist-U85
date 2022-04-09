@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include <stdint.h>
-#include <stdio.h>
 
 #define WF_NEG_INF (-0x40000000)
 
