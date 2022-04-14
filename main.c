@@ -3,7 +3,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "ketopt.h"
-#include "kalloc.h"
 #include "kseq.h"
 KSEQ_INIT(gzFile, gzread)
 

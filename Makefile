@@ -37,5 +37,4 @@ depend:
 
 # DO NOT DELETE
 
-kalloc.o: kalloc.h
-main.o: ketopt.h kalloc.h kseq.h
+main.o: ketopt.h kseq.h
