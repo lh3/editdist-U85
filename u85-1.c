@@ -11,18 +11,20 @@ int32_t u85_1(int32_t tl, const char *ts, int32_t ql, const char *qs)
 	H = a[1] + 2;
 	H[0] = -1, H[-2] = H[-1] = H[1] = H[2] = WF_NEG_INF; // pad with WF_NEG_INF
 	while (1) {
-		int32_t d, *G;
+		int32_t d, *G, min = INT32_MAX;
 		for (d = lo; d <= hi; ++d) {
-			int32_t k = H[d], i = d + k;
+			int32_t k = H[d], i = d + k, x;
 			if (k < -1 || i < -1) continue;
 			while (k + 1 < tl && i + 1 < ql && ts[k+1] == qs[i+1])
 				++k, ++i;
 			if (k == tl - 1 && i == ql - 1) break;
 			H[d] = k;
+			x = ql - i > tl - k? ql - i : tl - k;
+			min = min < x? min : x;
 		}
 		if (d <= hi) break;
-		while (H[lo] >= tl || lo + H[lo] >= ql) ++lo;
-		while (H[hi] >= tl || hi + H[hi] >= ql) --hi;
+		while (H[lo] >= tl || lo + H[lo] >= ql || (ql - tl) - lo >= min) ++lo;
+		while (H[hi] >= tl || hi + H[hi] >= ql || hi - (ql - tl) >= min) --hi;
 		if (lo > -tl) --lo;
 		if (hi <  ql) ++hi;
 		G = a[s&1] + 2 - lo;
