@@ -68,6 +68,8 @@ int32_t u85_2(int32_t tl, const char *ts, int32_t ql, const char *qs)
 			H[d] = k;
 		}
 		if (d <= hi) break;
+		while (H[lo] >= tl || lo + H[lo] >= ql) ++lo;
+		while (H[hi] >= tl || hi + H[hi] >= ql) --hi;
 		if (lo > -tl) --lo;
 		if (hi <  ql) ++hi;
 		G = a[s&1] + 2 - lo;

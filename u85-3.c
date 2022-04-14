@@ -93,6 +93,8 @@ int32_t u85_3(int32_t tl, const char *ts, int32_t ql, const char *qs)
 			H[d] = k;
 		}
 		if (d <= hi) break;
+		while (H[lo] >= tl || lo + H[lo] >= ql) ++lo;
+		while (H[hi] >= tl || hi + H[hi] >= ql) --hi;
 		if ((s&0x1f) == 0) wf_prune_global(tl, ql, &lo, &hi, H);
 		if (lo > -tl) --lo;
 		if (hi <  ql) ++hi;
