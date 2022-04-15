@@ -49,7 +49,7 @@ static inline int32_t wf_extend1_padded(const char *ts, const char *qs, int32_t 
 	return k;
 }
 
-int32_t u85_2(int32_t tl, const char *ts, int32_t ql, const char *qs)
+int32_t u85_3(int32_t tl, const char *ts, int32_t ql, const char *qs)
 {
 	int32_t *a[2], *H, lo = 0, hi = 0, s = 0;
 	char *pts, *pqs;
@@ -59,19 +59,25 @@ int32_t u85_2(int32_t tl, const char *ts, int32_t ql, const char *qs)
 	H = a[1] + 2;
 	H[0] = -1, H[-2] = H[-1] = H[1] = H[2] = WF_NEG_INF; // pad with WF_NEG_INF
 	while (1) {
-		int32_t d, *G, min = INT32_MAX;
+		int32_t d, *G;
 		for (d = lo; d <= hi; ++d) {
-			int32_t k = H[d], i, x;
+			int32_t k = H[d];
 			if (k < -1 || d + k < -1 || k >= tl || d + k >= ql) continue;
 			k = wf_extend1_padded(pts, pqs, k, d);
 			if (k == tl - 1 && d + k == ql - 1) break;
-			H[d] = k, i = d + k;
-			x = ql - i > tl - k? ql - i : tl - k;
-			min = min < x? min : x;
+			H[d] = k;
 		}
 		if (d <= hi) break;
-		while (H[lo] >= tl || lo + H[lo] >= ql || (ql - tl) - lo >= min) ++lo;
-		while (H[hi] >= tl || hi + H[hi] >= ql || hi - (ql - tl) >= min) --hi;
+		if (((s+1)&0x1f) == 0) {
+			int32_t min = INT32_MAX;
+			for (d = lo; d <= hi; ++d) {
+				int32_t k = H[d], i = d + k;
+				int32_t x = ql - i > tl - k? ql - i : tl - k;
+				min = min < x? min : x;
+			}
+			while (H[lo] >= tl || lo + H[lo] >= ql || (ql - tl) - lo >= min) ++lo;
+			while (H[hi] >= tl || hi + H[hi] >= ql || hi - (ql - tl) >= min) --hi;
+		}
 		if (lo > -tl) --lo;
 		if (hi <  ql) ++hi;
 		G = a[s&1] + 2 - lo;
