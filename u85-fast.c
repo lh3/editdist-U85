@@ -72,8 +72,8 @@ int32_t u85_fast(int32_t tl, const char *ts, int32_t ql, const char *qs)
 				int32_t x = ql - i > tl - k? ql - i : tl - k;
 				min = min < x? min : x;
 			}
-			while (H[lo] >= tl || lo + H[lo] >= ql || (ql - tl) - lo >= min) ++lo;
-			while (H[hi] >= tl || hi + H[hi] >= ql || hi - (ql - tl) >= min) --hi;
+			while ((ql - tl) - lo >= min) ++lo;
+			while (hi - (ql - tl) >= min) --hi;
 		}
 		if (lo > -tl) --lo;
 		if (hi <  ql) ++hi;
