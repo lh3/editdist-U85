@@ -14,7 +14,6 @@ int32_t u85_basic(int32_t tl, const char *ts, int32_t ql, const char *qs)
 		int32_t d, *G, min = INT32_MAX;
 		for (d = lo; d <= hi; ++d) {
 			int32_t k = H[d], i = d + k, x;
-			if (k < -1 || i < -1) continue;
 			// extend along exact matches; can be optimized with __builtin_ctzl()
 			while (k + 1 < tl && i + 1 < ql && ts[k+1] == qs[i+1])
 				++k, ++i;

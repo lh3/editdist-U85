@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
+#include <assert.h>
 
 #define WF_NEG_INF (-0x40000000)
 
@@ -59,7 +60,7 @@ int32_t u85_fast(int32_t tl, const char *ts, int32_t ql, const char *qs)
 		int32_t d, *G;
 		for (d = lo; d <= hi; ++d) {
 			int32_t k = H[d];
-			if (k < -1 || d + k < -1 || k >= tl || d + k >= ql) continue;
+			if (k >= tl || d + k >= ql) continue;
 			k = wf_extend1_padded(pts, pqs, k, d);
 			if (k == tl - 1 && d + k == ql - 1) break;
 			H[d] = k;
