@@ -60,7 +60,6 @@ int32_t u85_fast(int32_t tl, const char *ts, int32_t ql, const char *qs)
 		int32_t d, *G;
 		for (d = lo; d <= hi; ++d) {
 			int32_t k = H[d];
-			if (k >= tl || d + k >= ql) continue;
 			k = wf_extend1_padded(pts, pqs, k, d);
 			if (k == tl - 1 && d + k == ql - 1) break;
 			H[d] = k;
@@ -85,6 +84,8 @@ int32_t u85_fast(int32_t tl, const char *ts, int32_t ql, const char *qs)
 		}
 		G[lo-2] = G[lo-1] = G[hi+1] = G[hi+2] = WF_NEG_INF;
 		H = G;
+		while (H[lo] >= tl || lo + H[lo] >= ql) ++lo;
+		while (H[hi] >= tl || hi + H[hi] >= ql) --hi;
 		++s;
 	}
 	free(a[0]);
