@@ -25,7 +25,7 @@ int32_t u85_basic(int32_t tl, const char *ts, int32_t ql, const char *qs)
 			min = min < x? min : x;
 		}
 		if (d <= hi) break;
-		// shrink bands
+		// shrink the band
 		while (H[lo] >= tl || lo + H[lo] >= ql || (ql - tl) - lo >= min) ++lo;
 		while (H[hi] >= tl || hi + H[hi] >= ql || hi - (ql - tl) >= min) --hi;
 		// calculate the next "wave"
@@ -33,10 +33,8 @@ int32_t u85_basic(int32_t tl, const char *ts, int32_t ql, const char *qs)
 		if (hi <  ql) ++hi;
 		G = a[s&1] + 2 - lo;
 		for (d = lo; d <= hi; ++d) { // this loop can be vectorized
-			int32_t k = H[d-1];
-			k = k > H[d]   + 1? k : H[d]   + 1;
-			k = k > H[d+1] + 1? k : H[d+1] + 1;
-			G[d] = k;
+			int32_t k = (H[d] >= H[d+1]? H[d] : H[d+1]) + 1;
+			G[d] = k >= H[d-1]? k : H[d-1];
 		}
 		G[lo-2] = G[lo-1] = G[hi+1] = G[hi+2] = WF_NEG_INF;
 		H = G;

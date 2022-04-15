@@ -65,7 +65,7 @@ int32_t u85_fast(int32_t tl, const char *ts, int32_t ql, const char *qs)
 			H[d] = k;
 		}
 		if (d <= hi) break;
-		if (((s+1)&0x1f) == 0) {
+		if (((s+1)&0x1f) == 0) { // shrink the band every 32 cycles
 			int32_t min = INT32_MAX;
 			for (d = lo; d <= hi; ++d) {
 				int32_t k = H[d], i = d + k;
@@ -79,10 +79,8 @@ int32_t u85_fast(int32_t tl, const char *ts, int32_t ql, const char *qs)
 		if (hi <  ql) ++hi;
 		G = a[s&1] + 2 - lo;
 		for (d = lo; d <= hi; ++d) {
-			int32_t k = H[d-1];
-			k = k > H[d]   + 1? k : H[d]   + 1;
-			k = k > H[d+1] + 1? k : H[d+1] + 1;
-			G[d] = k;
+			int32_t k = (H[d] >= H[d+1]? H[d] : H[d+1]) + 1;
+			G[d] = k >= H[d-1]? k : H[d-1];
 		}
 		G[lo-2] = G[lo-1] = G[hi+1] = G[hi+2] = WF_NEG_INF;
 		H = G;
