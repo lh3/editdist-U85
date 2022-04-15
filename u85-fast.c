@@ -49,32 +49,7 @@ static inline int32_t wf_extend1_padded(const char *ts, const char *qs, int32_t 
 	return k;
 }
 
-static inline void wf_prune_global(int32_t tl, int32_t ql, int32_t *lo, int32_t *hi, const int32_t *H)
-{
-	int32_t d, min = INT32_MAX, l = *lo, h = *hi;
-	for (d = l; d <= h; ++d) {
-		int32_t i = d + H[d];
-		int32_t x = ql - i > tl - H[d]? ql - i : tl - H[d];
-		min = min < x? min : x; // min is the max possible distance
-	}
-	for (d = l; d <= h; ++d) {
-		int32_t i = d + H[d];
-		int32_t x = (ql - i) - (tl - H[d]); // x is the least possible distance from b[k]
-		x = x >= 0? x : -x;
-		if (x < min) break;
-	}
-	l = d;
-	for (d = h; d >= l; --d) {
-		int32_t i = d + H[d];
-		int32_t x = (ql - i) - (tl - H[d]);
-		x = x >= 0? x : -x;
-		if (x < min) break;
-	}
-	h = d;
-	*lo = l, *hi = h;
-}
-
-int32_t u85_4(int32_t tl, const char *ts, int32_t ql, const char *qs)
+int32_t u85_fast(int32_t tl, const char *ts, int32_t ql, const char *qs)
 {
 	int32_t *a[2], *H, lo = 0, hi = 0, s = 0;
 	char *pts, *pqs;
@@ -93,9 +68,16 @@ int32_t u85_4(int32_t tl, const char *ts, int32_t ql, const char *qs)
 			H[d] = k;
 		}
 		if (d <= hi) break;
-		while (H[lo] >= tl || lo + H[lo] >= ql) ++lo;
-		while (H[hi] >= tl || hi + H[hi] >= ql) --hi;
-		if ((s&0x1f) == 0) wf_prune_global(tl, ql, &lo, &hi, H);
+		if (((s+1)&0x1f) == 0) {
+			int32_t min = INT32_MAX;
+			for (d = lo; d <= hi; ++d) {
+				int32_t k = H[d], i = d + k;
+				int32_t x = ql - i > tl - k? ql - i : tl - k;
+				min = min < x? min : x;
+			}
+			while (H[lo] >= tl || lo + H[lo] >= ql || (ql - tl) - lo >= min) ++lo;
+			while (H[hi] >= tl || hi + H[hi] >= ql || hi - (ql - tl) >= min) --hi;
+		}
 		if (lo > -tl) --lo;
 		if (hi <  ql) ++hi;
 		G = a[s&1] + 2 - lo;

@@ -4,7 +4,7 @@ CFLAGS=		-g -Wall -march=native -O3
 CXXFLAGS=	$(CFLAGS)
 CPPFLAGS=
 INCLUDES=
-OBJS=		u85-1.o u85-2.o u85-3.o u85-4.o
+OBJS=		u85-basic.o u85-fast.o
 PROG=		test-u85
 LIBS=		-lz
 

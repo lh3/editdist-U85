@@ -3,7 +3,7 @@
 
 #define WF_NEG_INF (-0x40000000)
 
-int32_t u85_1(int32_t tl, const char *ts, int32_t ql, const char *qs)
+int32_t u85_basic(int32_t tl, const char *ts, int32_t ql, const char *qs)
 {
 	int32_t *a[2], *H, lo = 0, hi = 0, s = 0;
 	a[0] = (int32_t*)malloc((tl + ql + 5) * 2 * sizeof(int32_t));
