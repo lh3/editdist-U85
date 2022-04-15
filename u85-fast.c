@@ -35,15 +35,12 @@ static void wf_pad_str(int32_t tl, const char *ts, int32_t ql, const char *qs, c
 
 static inline int32_t wf_extend1_padded(const char *ts, const char *qs, int32_t k, int32_t d)
 {
-	uint64_t cmp = 0;
-	const char *ts_ = ts + 1;
-	const char *qs_ = qs + d + 1;
-	while (1) {
-		uint64_t x = *(uint64_t*)(ts_ + k); // warning: unaligned memory access
-		uint64_t y = *(uint64_t*)(qs_ + k);
-		cmp = x ^ y;
-		if (cmp == 0) k += 8;
-		else break;
+	const uint64_t *ts_ = (const uint64_t*)(ts + k + 1);
+	const uint64_t *qs_ = (const uint64_t*)(qs + d + k + 1);
+	uint64_t cmp = *ts_ ^ *qs_;
+	while (cmp == (uint64_t)0) {
+		++ts_, ++qs_, k += 8;
+		cmp = *ts_ ^ *qs_;
 	}
 	k += __builtin_ctzl(cmp) >> 3;
 	return k;
