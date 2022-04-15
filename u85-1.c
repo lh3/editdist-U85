@@ -15,20 +15,24 @@ int32_t u85_1(int32_t tl, const char *ts, int32_t ql, const char *qs)
 		for (d = lo; d <= hi; ++d) {
 			int32_t k = H[d], i = d + k, x;
 			if (k < -1 || i < -1) continue;
+			// extend along exact matches; can be optimized with __builtin_ctzl()
 			while (k + 1 < tl && i + 1 < ql && ts[k+1] == qs[i+1])
 				++k, ++i;
-			if (k == tl - 1 && i == ql - 1) break;
+			if (k == tl - 1 && i == ql - 1) break; // reaching the end cell
 			H[d] = k;
+			// calculate the max possible dist from cell (i,k)
 			x = ql - i > tl - k? ql - i : tl - k;
 			min = min < x? min : x;
 		}
 		if (d <= hi) break;
+		// shrink bands
 		while (H[lo] >= tl || lo + H[lo] >= ql || (ql - tl) - lo >= min) ++lo;
 		while (H[hi] >= tl || hi + H[hi] >= ql || hi - (ql - tl) >= min) --hi;
+		// calculate the next "wave"
 		if (lo > -tl) --lo;
 		if (hi <  ql) ++hi;
 		G = a[s&1] + 2 - lo;
-		for (d = lo; d <= hi; ++d) {
+		for (d = lo; d <= hi; ++d) { // this loop can be vectorized
 			int32_t k = H[d-1];
 			k = k > H[d]   + 1? k : H[d]   + 1;
 			k = k > H[d+1] + 1? k : H[d+1] + 1;
