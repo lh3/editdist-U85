@@ -174,7 +174,7 @@ uint32_t *u85_cigar(int32_t tl, const char *ts, int32_t ql, const char *qs, int3
 				++k;
 				z = k >= H[d-1]? z : 0;
 				k = k >= H[d-1]? k : H[d-1];
-				G[d] = k, x[k] = z;
+				G[d] = k, x[d] = z;
 			}
 			a = wf_tb_add(&tb, lo, hi);
 			for (d = 0; d <= hi - lo; ++d)
